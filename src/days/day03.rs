@@ -31,13 +31,13 @@ fn find_do_donts(input: &str) -> Vec<(usize, i32)> {
     let re_do = Regex::new(r"do\(\)").unwrap();
     let re_dont = Regex::new(r"don\'t\(\)").unwrap();
 
-    for (i, cap) in re_do.captures_iter(input).enumerate() {
+    re_do.captures_iter(input).for_each(|cap| {
         answer.push((cap.get(0).unwrap().start(), 1));
-    }
+    });
 
-    for (i, cap) in re_dont.captures_iter(input).enumerate() {
+    re_dont.captures_iter(input).for_each(|cap| {
         answer.push((cap.get(0).unwrap().start(), -1));
-    }
+    });
 
     answer.sort();
 
