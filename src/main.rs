@@ -35,6 +35,7 @@ fn main() {
         6 => days::day06::run(part),
         7 => days::day07::run(part),
         8 => days::day08::run(part),
+        9 => days::day09::run(part),
         _ => println!("Invalid day"),
     }
 }
