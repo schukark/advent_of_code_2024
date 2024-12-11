@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::{fmt::Display, mem::swap};
 
 use crate::utils::input;
 
@@ -55,10 +55,60 @@ impl FileSystem {
         self.blocks.append(&mut vec![None; len]);
     }
 
+    fn move_file(&mut self, file_index: usize) -> Result<(), ()> {
+        let file_len = self.files[file_index];
+        let mut free_space = Option::None;
+
+        let mut current_free = 0;
+        for (idx, block) in self.blocks.iter().enumerate() {
+            if block.is_none() {
+                current_free += 1;
+            } else {
+                current_free = 0;
+            }
+
+            if current_free >= file_len {
+                free_space = Some(idx - current_free + 1);
+                break;
+            }
+        }
+
+        let free_space = free_space.ok_or(())?;
+
+        let file_start = *self
+            .blocks
+            .iter()
+            .enumerate()
+            .filter(|(_idx, block)| block.is_some() && block.unwrap() == file_index)
+            .map(|(idx, _)| idx)
+            .collect::<Vec<_>>()
+            .first()
+            .ok_or(())?;
+
+        if free_space > file_start {
+            return Err(());
+        }
+
+        let slices = self.blocks.split_at_mut(file_start);
+
+        for i in 0..file_len {
+            swap(&mut slices.0[i + free_space], &mut slices.1[i]);
+        }
+
+        Ok(())
+    }
+
+    fn compact_v2(&mut self) {
+        for i in (0..self.files.len()).rev() {
+            let _ = self.move_file(i);
+        }
+    }
+
     fn compute_value(&self) -> usize {
         self.blocks
             .iter()
             .enumerate()
+            .filter(|(_idx, x)| x.is_some())
             .map(|(idx, value)| idx * value.unwrap())
             .sum::<usize>()
     }
@@ -99,9 +149,26 @@ fn part1(input: &str) {
         }
     });
 
-    println!("{}", file_system);
     file_system.compact();
     println!("{}", file_system.compute_value());
 }
 
-fn part2(input: &str) {}
+fn part2(input: &str) {
+    let input = input
+        .chars()
+        .map(|x| x.to_digit(10).unwrap() as usize)
+        .collect::<Vec<_>>();
+
+    let files = input.chunks(2).map(|chunk| chunk[0]).collect::<Vec<_>>();
+    let mut file_system = FileSystem::new(files);
+
+    input.chunks(2).enumerate().for_each(|(idx, chunk)| {
+        file_system.add_block(idx, chunk[0]);
+        if chunk.len() > 1 {
+            file_system.add_space(chunk[1]);
+        }
+    });
+
+    file_system.compact_v2();
+    println!("{}", file_system.compute_value());
+}
