@@ -1,4 +1,4 @@
-use std::env;
+use std::{env, time::Instant};
 mod days;
 mod utils;
 
@@ -26,6 +26,8 @@ fn main() {
         }
     };
 
+    let before = Instant::now();
+
     match day {
         1 => days::day01::run(part),
         2 => days::day02::run(part),
@@ -40,4 +42,6 @@ fn main() {
         11 => days::day11::run(part),
         _ => println!("Invalid day"),
     }
+
+    println!("Execution time: {:.2?}", before.elapsed());
 }
