@@ -71,5 +71,5 @@ fn part2(input: &str) {
         current_state = make_step(&current_state);
     }
 
-    println!("Part 1: {}", current_state.values().sum::<usize>());
+    println!("Part 2: {}", current_state.values().sum::<usize>());
 }
