@@ -40,6 +40,7 @@ fn main() {
         9 => days::day09::run(part),
         10 => days::day10::run(part),
         11 => days::day11::run(part),
+        12 => days::day12::run(part),
         _ => println!("Invalid day"),
     }
 
