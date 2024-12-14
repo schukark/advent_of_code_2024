@@ -1,0 +1,13 @@
+button_types = _{ "A" | "B" }
+
+value = { ASCII_DIGIT+ }
+
+x_shift = { "X+" ~ value }
+y_shift = { "Y+" ~ value }
+
+button_line = { "Button " ~ button_types ~ ": " ~ x_shift ~ ", " ~ y_shift ~ NEWLINE }
+prize_line  = { "Prize: X=" ~ value ~ ", Y=" ~ value ~ NEWLINE? }
+
+input_block = { button_line ~ button_line ~ prize_line ~ NEWLINE? }
+
+file = { SOI ~ input_block+ ~ EOI }
