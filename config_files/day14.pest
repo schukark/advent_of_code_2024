@@ -1,0 +1,8 @@
+value = { "-"? ~ ASCII_DIGIT+ }
+
+position = { "p=" ~ value ~ "," ~ value }
+velocity = { "v=" ~ value ~ "," ~ value }
+
+line = { position ~ " " ~ velocity ~ NEWLINE? }
+
+file = { SOI ~ line+ ~ EOI }
