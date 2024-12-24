@@ -43,6 +43,7 @@ fn main() {
         12 => days::day12::run(part),
         13 => days::day13::run(part),
         14 => days::day14::run(part),
+        15 => days::day15::run(part),
         _ => println!("Invalid day"),
     }
 
