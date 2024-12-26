@@ -1,0 +1,9 @@
+register = { "A" | "B" | "C" }
+value    = { ASCII_DIGIT+ }
+
+register_line = { "Register " ~ register ~ ": " ~ value ~ NEWLINE }
+instruction   = { value ~ "," ~ value ~ ","? }
+
+program = { "Program: " ~ instruction+ }
+
+file = { SOI ~ register_line+ ~ NEWLINE ~ program ~ NEWLINE ~ EOI }
